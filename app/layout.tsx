@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import RoboticCursor from "@/components/smooth-cursor";
 
 const ppInter = Inter({
   subsets: ["latin"],
@@ -19,7 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${ppInter.className} antialiased`}>
+      <body className={`${ppInter.className} antialiased bg-gray-700`}>
+        <RoboticCursor />
         <main className="bg-glitch h-dvh">{children}</main>
       </body>
     </html>

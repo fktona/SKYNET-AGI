@@ -1,162 +1,403 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useAnimation,
+} from "framer-motion";
 import { Input } from "@/components/ui/input";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
+import { handleMouseEnter } from "@/animations/animation";
+
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 export default function SkynetInterface() {
-  const [messages] = useState([
+  const [messages, setMessages] = useState([
     {
       id: 1,
-      content:
-        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes",
-      timestamp: "2m",
+      content: "Welcome to SKYNET_AGI. How may I assist you?",
+      timestamp: "Just now",
     },
     {
       id: 2,
-      content:
-        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes",
-      timestamp: "2m",
+      content: "Welcome to SKYNET_AGI. How may I assist you?",
+      timestamp: "Just now",
     },
   ]);
+  const [inputMessage, setInputMessage] = useState("");
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
+  const rotateX = useTransform(cursorY, [0, 300], [5, -5]);
+  const rotateY = useTransform(cursorX, [0, 300], [-5, 5]);
+  const controls = useAnimation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useGSAP(() => {
+    // Robotic text animation for the title
+    gsap.to(titleRef.current, {
+      duration: 2,
+      text: "SKYNET_AGI",
+      ease: "steps(10)",
+      repeat: -1,
+      repeatDelay: 1,
+      yoyo: true,
+    });
+
+    // Scroll animation setup
+    if (messagesContainerRef.current) {
+      ScrollTrigger.create({
+        trigger: messagesContainerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+      });
+    }
+
+    // Add a new animation for the input field
+    gsap.from(inputRef.current, {
+      width: 0,
+      opacity: 0,
+      duration: 1,
+      ease: "power2.inOut",
+      scrollTrigger: {
+        trigger: inputRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [cursorX, cursorY]);
+
+  useEffect(() => {
+    // Trigger handleMouseEnter when the component mounts
+    if (titleRef.current) {
+      handleMouseEnter({
+        target: titleRef.current,
+      } as unknown as React.MouseEvent<HTMLHeadingElement>);
+    }
+  }, []);
+
+  const handleInputFocus = () => {
+    gsap.to(inputRef.current, {
+      scale: 1.05,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+
+  const handleInputBlur = () => {
+    gsap.to(inputRef.current, {
+      scale: 1,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputMessage.trim()) {
+      const newMessage = {
+        id: messages.length + 1,
+        content: inputMessage,
+        timestamp: "Just now",
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setInputMessage("");
+
+      // Simulate AI response
+      setTimeout(() => {
+        const aiResponse = {
+          id: messages.length + 2,
+          content: "I am processing your request. Please stand by.",
+          timestamp: "Just now",
+        };
+        setMessages((prevMessages) => [...prevMessages, aiResponse]);
+
+        // Scroll to the latest message
+        if (messagesContainerRef.current) {
+          gsap.to(messagesContainerRef.current, {
+            duration: 0.5,
+            scrollTop: messagesContainerRef.current.scrollHeight,
+            ease: "power2.out",
+          });
+        }
+      }, 1000);
+    }
+  };
+
+  // const InteractiveCircuit = () => {
+  //   const circuitRef = useRef<SVGSVGElement>(null);
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden">
-      {/* Starry background */}
-      {/* <div
-        className="absolute inset-0 opacity-50"
-        style={{
-          backgroundImage: `radial-gradient(white 1px, transparent 1px)`,
-          backgroundSize: "50px 50px",
-        }}
-      /> */}
-
-      {/* Main content */}
-      <div className="relative z-10 min-h-screen flex flex-col p-8">
-        {/* Header */}
-        <h1 className="lg:text-[50px] text-[33.05px]  font-mono font-extrabold text-center mb-8 tracking-widest">
+    <motion.div
+      className="min-h-screen text-white relative overflow-hidden"
+      style={{ perspective: 2000 }}
+      animate={controls}
+      onHoverStart={() =>
+        controls.start({
+          backgroundColor: "rgba(0, 0, 0, 0.2)",
+          transformStyle: "preserve-3d",
+          transition: { duration: 0.5, ease: "easeInOut" },
+        })
+      }
+      onHoverEnd={() => controls.start({ backgroundColor: "rgba(0, 0, 0, 0)" })}
+    >
+      <motion.div
+        className="relative z-10 min-h-screen flex flex-col p-8"
+        style={{ rotateX, rotateY }}
+      >
+        <h1
+          ref={titleRef}
+          data-value="SKYNET_AGI"
+          onMouseEnter={handleMouseEnter}
+          className="lg:text-[50px] text-[33.05px] relative z-50  font-mono font-extrabold text-center mb-8 tracking-widest"
+        >
           SKYNET_AGI
         </h1>
 
-        {/* Triangular markers */}
-        <div className="absolute  left-20 top-16 text-2xl rotate-45">△</div>
-        <div className="absolute top-[30%] right-[20%] text-2xl -rotate-45">
+        {/* Enhanced animated elements */}
+        <motion.div
+          className="absolute left-[10%] top-[20%] text-2xl"
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
           △
-        </div>
-        <div className="absolute top-[30%] right-[30%] text-2xl -rotate-45">
+        </motion.div>
+        <motion.div
+          className="absolute top-[40%] right-[10%] text-2xl"
+          animate={{
+            rotate: [0, -360],
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
           △
-        </div>
-        <div className="absolute top-[40%]  right-[20%] text-2xl -rotate-45">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="34"
-            height="35"
-            viewBox="0 0 34 35"
-            fill="none"
-          >
-            <g filter="url(#filter0_f_29_126)">
-              <path
-                d="M9.52878 6.83076L26.7593 19.9403L6.79086 28.3076L9.52878 6.83076Z"
-                fill="#D9D9D9"
-              />
-            </g>
-            <defs>
-              <filter
-                id="filter0_f_29_126"
-                x="0.0908327"
-                y="0.130811"
-                width="33.3684"
-                height="34.8768"
-                filterUnits="userSpaceOnUse"
-                colorInterpolationFilters="sRGB"
-              >
-                <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                <feBlend
-                  mode="normal"
-                  in="SourceGraphic"
-                  in2="BackgroundImageFix"
-                  result="shape"
-                />
-                <feGaussianBlur
-                  stdDeviation="3.35"
-                  result="effect1_foregroundBlur_29_126"
-                />
-              </filter>
-            </defs>
-          </svg>
-        </div>
-        <div className="absolute top-[50%]  left-[30%] text-2xl -rotate-45">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="34"
-            height="35"
-            viewBox="0 0 34 35"
-            fill="none"
-          >
-            <g filter="url(#filter0_f_29_126)">
-              <path
-                d="M9.52878 6.83076L26.7593 19.9403L6.79086 28.3076L9.52878 6.83076Z"
-                fill="#D9D9D9"
-              />
-            </g>
-            <defs>
-              <filter
-                id="filter0_f_29_126"
-                x="0.0908327"
-                y="0.130811"
-                width="33.3684"
-                height="34.8768"
-                filterUnits="userSpaceOnUse"
-                colorInterpolationFilters="sRGB"
-              >
-                <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                <feBlend
-                  mode="normal"
-                  in="SourceGraphic"
-                  in2="BackgroundImageFix"
-                  result="shape"
-                />
-                <feGaussianBlur
-                  stdDeviation="3.35"
-                  result="effect1_foregroundBlur_29_126"
-                />
-              </filter>
-            </defs>
-          </svg>
-        </div>
+        </motion.div>
 
-        {/* Side stripes */}
-        <div className="fixed left-0 top-0 h-[82%] w-8 items-center  flex flex-col justify-end mb-10">
-          <div className=" -rotate-90 font-bold text-3xl ml-6 hidden lg:block">
-            \\\\\\\
-          </div>
-        </div>
-        <div className="fixed right-0 top-0 h-[82%] w-8 items-center px-4 flex flex-col justify-end bottom-10">
-          <div className=" -rotate-90 font-bold text-3xl mr-6">\\\\\\\</div>
-        </div>
-        {/* Central skull with aura */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        {/* Pulsating shapes */}
+        <motion.div
+          className="absolute bottom-[30%] left-[20%] text-2xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="34"
+            height="35"
+            viewBox="0 0 34 35"
+            fill="none"
+          >
+            <g filter="url(#filter0_f_29_126)">
+              <path
+                d="M9.52878 6.83076L26.7593 19.9403L6.79086 28.3076L9.52878 6.83076Z"
+                fill="#D9D9D9"
+              />
+            </g>
+            <defs>
+              <filter
+                id="filter0_f_29_126"
+                x="0.0908327"
+                y="0.130811"
+                width="33.3684"
+                height="34.8768"
+                filterUnits="userSpaceOnUse"
+                colorInterpolationFilters="sRGB"
+              >
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                <feBlend
+                  mode="normal"
+                  in="SourceGraphic"
+                  in2="BackgroundImageFix"
+                  result="shape"
+                />
+                <feGaussianBlur
+                  stdDeviation="3.35"
+                  result="effect1_foregroundBlur_29_126"
+                />
+              </filter>
+            </defs>
+          </svg>
+        </motion.div>
+        <motion.div
+          className="absolute top-[30%] right-[20%] text-2xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="34"
+            height="35"
+            viewBox="0 0 34 35"
+            fill="none"
+          >
+            <g filter="url(#filter0_f_29_126)">
+              <path
+                d="M9.52878 6.83076L26.7593 19.9403L6.79086 28.3076L9.52878 6.83076Z"
+                fill="#D9D9D9"
+              />
+            </g>
+            <defs>
+              <filter
+                id="filter0_f_29_126"
+                x="0.0908327"
+                y="0.130811"
+                width="33.3684"
+                height="34.8768"
+                filterUnits="userSpaceOnUse"
+                colorInterpolationFilters="sRGB"
+              >
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                <feBlend
+                  mode="normal"
+                  in="SourceGraphic"
+                  in2="BackgroundImageFix"
+                  result="shape"
+                />
+                <feGaussianBlur
+                  stdDeviation="3.35"
+                  result="effect1_foregroundBlur_29_126"
+                />
+              </filter>
+            </defs>
+          </svg>
+        </motion.div>
+
+        {/* Side stripes with enhanced staggered animation */}
+        <motion.div className="fixed left-0 top-0 h-[82%] w-8 items-center lg:flex lg:px-10 hidden flex-col justify-end mb-10">
+          <motion.div
+            className="-rotate-90 font-bold text-3xl ml-6"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+          >
+            {"\\\\\\\\\\\\\\\\\\".split("").map((char, index) => (
+              <motion.span
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.div>
+        </motion.div>
+        <motion.div className="fixed -right-5 lg:right-0 top-0 h-[82%] w-8 items-center flex lg:px-10  flex-col justify-end mb-10">
+          <motion.div
+            className="-rotate-90 font-bold text-3xl ml-6"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+          >
+            {"\\\\\\\\\\\\\\\\\\".split("").map((char, index) => (
+              <motion.span
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Central skull with hover effect */}
+        <motion.div
+          className="absolute inset-0 flex lg:items-center items-start top-[30%] lg:top-0 justify-center"
+          whileHover={{ scale: 1.1 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
           <div className="relative w-64 h-64">
-            {/* Aura effect */}
-            {/* <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500 opacity-75 blur-xl animate-pulse" />
-            <div className="absolute inset-4 rounded-full bg-teal-500/30 backdrop-blur-sm" /> */}
-            {/* Skull image */}
-            <div className="relative w-full h-full">
-              <img
-                src="/sku.svg"
-                alt="Skull"
-                className="w-full h-full object-contain"
-              />
-            </div>
+            {/* <img
+              src="/sku.svg"
+              alt="Skull"
+              className="w-full h-full object-contain"
+            /> */}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="absolute mb-20 lg:mb-0 right-3 bottom-3 max-w-lg lg:px-10 px-4">
-          {/* Messages feed */}
-          <div className="max-w-xl mx-auto w-full space-y-4 mb-8  ">
+        {/* Messages and input area with enhanced animations */}
+        <div className="absolute mb-20 lg:mb-0 right-3 bottom-3 selector max-w-lg lg:px-10 px-4 ">
+          <div
+            ref={messagesContainerRef}
+            className="max-w-xl mx-auto w-full space-y-4 mb-8 h-[200px] overflow-y-auto selector"
+          >
             {messages.map((message) => (
-              <div key={message.id} className="flex items-start gap-2">
-                <div className="flex-1  rounded p-4">
+              <motion.div
+                key={message.id + message.timestamp}
+                className="flex items-start gap-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <motion.div
+                  className="flex-1 rounded p-4 bg-white/5"
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+                  transition={{ duration: 0.3 }}
+                >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm text-gray-400">SKYNET_AGI</span>
                     <span className="lg:text-xs text-[8px] text-gray-500">
@@ -164,19 +405,28 @@ export default function SkynetInterface() {
                     </span>
                   </div>
                   <p className="text-sm">{message.content}</p>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             ))}
           </div>
-          {/* Input area */}
-          <div className="w-full ">
+          <form onSubmit={handleSubmit} className="w-full">
             <div className="relative">
               <Input
+                ref={inputRef}
                 type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 placeholder="What do you have to say?"
-                className="w-full bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white"
+                className="w-full bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
               />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2">
+              <motion.button
+                type="submit"
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+                whileHover={{ scale: 1.1, rotate: 360 }}
+                whileTap={{ scale: 0.9 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -201,27 +451,84 @@ export default function SkynetInterface() {
                     </clipPath>
                   </defs>
                 </svg>
-              </button>
+              </motion.button>
+            </div>
+          </form>
+        </div>
+
+        {/* AI indicator with enhanced staggered animation */}
+        <motion.div
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs text-white"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: { transition: { staggerChildren: 0.1 } },
+          }}
+        >
+          <div className="tracking-[0.1em] w-[70vw] max-w-[400px] justify-center text-center items-center relative font-bold text-lg">
+            {[
+              {
+                text: "\\\\\\\\\\\\\\ ",
+                animation: {
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0 },
+                },
+              },
+              {
+                text: "AI",
+                animation: {
+                  hidden: { opacity: 0, scale: 0.5 },
+                  visible: { opacity: 1, scale: 1 },
+                },
+              },
+              {
+                text: " /////// ",
+                animation: {
+                  hidden: { opacity: 0, y: -10 },
+                  visible: { opacity: 1, y: 0 },
+                },
+              },
+            ].map((group, groupIndex) =>
+              group.text.split("").map((char, charIndex) => (
+                <motion.span
+                  key={`${groupIndex}-${charIndex}`}
+                  variants={group.animation}
+                >
+                  {char.trim() || <>&nbsp;</>}
+                </motion.span>
+              ))
+            )}
+            <div
+              style={{ perspective: 2000 }}
+              className="absolute rotate-180 w-full h-10"
+            >
+              <div
+                className="w-full h-full bg-white/15"
+                style={{
+                  transform: "rotateX(45deg)",
+                  transformOrigin: "center top",
+                  backfaceVisibility: "hidden",
+                  clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
+                }}
+              ></div>
             </div>
           </div>
-        </div>
+        </motion.div>
+      </motion.div>
 
-        {/* AI indicator */}
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs text-white">
-          <div className="tracking-[0.1em] font-bold text-lg">
-            \\\\\\\ AI ///////
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        .mask-skull {
-          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm1-13h-2v6h2V7zm0 8h-2v2h2v-2z'/%3E%3C/svg%3E");
-          mask-size: contain;
-          mask-repeat: no-repeat;
-          mask-position: center;
-        }
-      `}</style>
-    </div>
+      {/* Add a new pulsating background effect */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-10"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </motion.div>
   );
 }
