@@ -159,7 +159,7 @@ export default function SkynetInterface() {
                 <div className="flex-1  rounded p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm text-gray-400">SKYNET_AGI</span>
-                    <span className="text-xs text-gray-500">
+                    <span className="lg:text-xs text-[8px] text-gray-500">
                       {message.timestamp}
                     </span>
                   </div>
