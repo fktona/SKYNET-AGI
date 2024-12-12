@@ -444,11 +444,11 @@ export default function SkynetInterface() {
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder="What do you have to say?"
-                className="w-full  relative bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
+                className="w-full sm:min-w-[420px] min-w-[calc(100vw-42px)]  relative bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
               />
               <motion.button
                 type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2"
+                className="absolute right-5 top-1/2 -translate-y-1/2"
                 whileHover={{ scale: 1.1, rotate: 360 }}
                 whileTap={{ scale: 0.9 }}
               >
