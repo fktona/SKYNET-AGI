@@ -2,15 +2,21 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useTypingContext } from "@/context/ctx";
+import { cn } from "@/lib/utils";
 
 const SkullInWave = () => {
   const { isTyping } = useTypingContext();
   const glowVariants = {
     typing: {
-      opacity: [0.5, 1, 0.5],
-      scale: [1, 1.2, 1],
+      opacity: [0.3, 0.7, 0.3],
+      scale: [1, 1.15, 1],
+      background: [
+        "linear-gradient(45deg, #ff6ec7, #7873f5)",
+        "linear-gradient(45deg, #56d8ff, #ff758c)",
+        "linear-gradient(45deg, #ff6ec7, #7873f5)",
+      ],
       transition: {
-        duration: 2,
+        duration: 2.5,
         repeat: Infinity,
         ease: "easeInOut",
       },
@@ -27,25 +33,28 @@ const SkullInWave = () => {
       transition={{ type: "spring", stiffness: 300 }}
     >
       <motion.div
-        className="absolute inset-0 flex lg:items-center items-start top-[25%] lg:top-0 justify-center"
+        className="absolute inset-0 flex lg:items-center  items-start top-[15%] lg:top-0 justify-center"
         whileHover={{ scale: 1.1 }}
         transition={{ type: "spring", stiffness: 300 }}
         style={{
           perspective: "1000px",
         }}
       >
-        <div className="relative isolate scale-[1.4] w-80 h-90">
+        <div className="relative isolate lg:scale-[1.4] md:w-80 md:h-90 w-72 h-90">
           {/* Wave GIF */}
           <Image
             src={isTyping ? "/waving.gif" : "/no-wave.gif"}
             alt="Wave Animation"
             width={1000}
             height={1000}
-            className="w-full h-full relative -z-20 object-contain"
+            className={cn(
+              "w-full h-full relative -z-20 object-contain  transition-opacity duration-500",
+              isTyping ? "opacity-1" : "opacity-0"
+            )}
           />
           {/* Skull Image */}
           <Image
-            src="/skull.png"
+            src="/skull2.png"
             alt="Skull"
             width={300}
             height={200}

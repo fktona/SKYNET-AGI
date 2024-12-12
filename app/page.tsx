@@ -56,6 +56,7 @@ export default function SkynetInterface() {
           type: "Skynet_Agi",
         };
         setMessages([initialMessage]);
+        (document.getElementById("sendsound") as HTMLAudioElement)?.play();
       } catch (error) {
         console.error("Error fetching initial messages:", error);
       }
@@ -164,6 +165,7 @@ export default function SkynetInterface() {
           type: "Skynet_Agi",
         };
         setMessages((prevMessages) => [...prevMessages, aiResponse]);
+        (document.getElementById("sendsound") as HTMLAudioElement)?.play();
 
         // Scroll to the latest message
         if (messagesContainerRef.current) {
@@ -184,20 +186,24 @@ export default function SkynetInterface() {
     <motion.div
       className=" h-full  text-white relative overflow-hidden"
       style={{ perspective: 2000 }}
-      animate={controls}
-      onHoverStart={() =>
-        controls.start({
-          backgroundColor: "rgba(0, 0, 0, 0.2)",
-          transformStyle: "preserve-3d",
-          transition: { duration: 0.5, ease: "easeInOut" },
-        })
-      }
-      onHoverEnd={() => controls.start({ backgroundColor: "rgba(0, 0, 0, 0)" })}
     >
       <motion.div
         className="relative z-10 min-h-screen flex flex-col p-8"
         style={{ rotateX, rotateY }}
+        animate={controls}
+        onHoverStart={() =>
+          controls.start({
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+            transformStyle: "preserve-3d",
+            transition: { duration: 0.5, ease: "easeInOut" },
+          })
+        }
+        onHoverEnd={() =>
+          controls.start({ backgroundColor: "rgba(0, 0, 0, 0)" })
+        }
       >
+        <audio id="sendsound" src="/send.mp3" hidden></audio>
+
         <h1
           ref={titleRef}
           data-value="SKYNET_AGI"
@@ -400,86 +406,6 @@ export default function SkynetInterface() {
         {/* Central skull with hover effect */}
 
         {/* Messages and input area with enhanced animations */}
-        <div className="absolute mb-20 lg:mb-0 right-3 bottom-3 selector max-w-lg lg:px-10 px-4 ">
-          <div
-            ref={messagesContainerRef}
-            className="max-w-xl mx-auto w-full space-y-4 mb-8 h-[200px] overflow-y-auto selector"
-          >
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                className="flex items-start gap-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <motion.div
-                  className="flex-1 rounded p-4 bg-white/5"
-                  whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm text-gray-400 capitalize">
-                      {message.type}
-                    </span>
-                    <span className="lg:text-xs text-[8px] text-gray-500">
-                      {formatDistanceToNow(message.timestamp, {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </div>
-                  <p className="text-sm">{message.content}</p>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-          <form onSubmit={handleSubmit} className="w-full flex">
-            <div className="relative  w-full flex-1 ">
-              <Input
-                ref={inputRef}
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                placeholder="What do you have to say?"
-                className="w-full sm:min-w-[420px] min-w-[calc(100vw-42px)]  relative bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
-              />
-              <motion.button
-                type="submit"
-                className="absolute right-5 top-1/2 -translate-y-1/2"
-                whileHover={{ scale: 1.1, rotate: 360 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="19"
-                  viewBox="0 0 18 19"
-                  fill="none"
-                >
-                  <g clipPath="url(#clip0_29_114)">
-                    <path
-                      d="M0.42749 0.773438L17.8897 9.50456L0.42749 18.2357V0.773438ZM0.42749 7.75833V11.2508L9.15861 9.50456L0.42749 7.75833Z"
-                      fill="white"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_29_114">
-                      <rect
-                        width="17.4622"
-                        height="17.4622"
-                        fill="white"
-                        transform="translate(0.42749 0.773438)"
-                      />
-                    </clipPath>
-                  </defs>
-                </svg>
-              </motion.button>
-            </div>
-          </form>
-        </div>
 
         {/* AI indicator with enhanced staggered animation */}
       </motion.div>
@@ -497,6 +423,94 @@ export default function SkynetInterface() {
           ease: "easeInOut",
         }}
       />
+      <div
+        style={{
+          perspective: 2000,
+        }}
+        className="fixed mb-20 z-50 lg:mb-0 right-3 bottom-3 selector max-w-lg lg:px-10 px-4 "
+      >
+        <div
+          style={{
+            transform: "rotateX(15deg) rotateY(8deg)",
+          }}
+          ref={messagesContainerRef}
+          className="max-w-xl mx-auto w-full space-y-4 mb-8 h-[200px] overflow-y-auto selector"
+        >
+          {messages.map((message) => (
+            <motion.div
+              key={message.id}
+              className="flex items-start gap-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                className="flex-1 rounded p-4 bg-white/5"
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm  text-gray-400  uppercase">
+                    {message.type}
+                  </span>
+                  <span className="lg:text-xs text-[8px] text-gray-500">
+                    {formatDistanceToNow(message.timestamp, {
+                      addSuffix: false,
+                    })}
+                  </span>
+                </div>
+                <p className="text-sm">{message.content}</p>
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+        <form onSubmit={handleSubmit} className="w-full flex">
+          <div className="relative  w-full flex-1 ">
+            <Input
+              ref={inputRef}
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+              placeholder="What do you have to say?"
+              className="w-full sm:min-w-[420px] min-w-[calc(100vw-42px)]  relative bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
+            />
+            <motion.button
+              type="submit"
+              className="absolute right-5 top-1/2 -translate-y-1/2"
+              whileHover={{ scale: 1.1, rotate: 360 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="19"
+                viewBox="0 0 18 19"
+                fill="none"
+              >
+                <g clipPath="url(#clip0_29_114)">
+                  <path
+                    d="M0.42749 0.773438L17.8897 9.50456L0.42749 18.2357V0.773438ZM0.42749 7.75833V11.2508L9.15861 9.50456L0.42749 7.75833Z"
+                    fill="white"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_29_114">
+                    <rect
+                      width="17.4622"
+                      height="17.4622"
+                      fill="white"
+                      transform="translate(0.42749 0.773438)"
+                    />
+                  </clipPath>
+                </defs>
+              </svg>
+            </motion.button>
+          </div>
+        </form>
+      </div>
     </motion.div>
   );
 }

@@ -28,7 +28,7 @@ export default function RootLayout({
           {" "}
           <RoboticCursor />
           <SkullInWave />
-          <main className="bg-glitch h-dvh">{children}</main>
+          <main className="bg-glitch h-dvh mb-10">{children}</main>
           <Footer />
         </TypingProvider>
       </body>
