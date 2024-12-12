@@ -40,15 +40,15 @@ const SkullInWave = () => {
           perspective: "1000px",
         }}
       >
-        <div className="relative isolate lg:scale-[1.4] md:w-80 md:h-90 w-72 h-90">
+        <div className="relative  isolate lg:scale-[1.4] md:w-80 md:h-90 w-72 h-90">
           {/* Wave GIF */}
           <Image
-            src={isTyping ? "/waving.gif" : "/no-wave.gif"}
+            src={"/waving.gif"}
             alt="Wave Animation"
             width={1000}
             height={1000}
             className={cn(
-              "w-full h-full relative -z-20 object-contain  transition-opacity duration-500",
+              "w-full h-full relative -z-20 object-contain hidden transition-opacity duration-500",
               isTyping ? "opacity-1" : "opacity-0"
             )}
           />

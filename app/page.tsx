@@ -189,18 +189,18 @@ export default function SkynetInterface() {
     >
       <motion.div
         className="relative z-10 min-h-screen flex flex-col p-8"
-        style={{ rotateX, rotateY }}
-        animate={controls}
-        onHoverStart={() =>
-          controls.start({
-            backgroundColor: "rgba(0, 0, 0, 0.2)",
-            transformStyle: "preserve-3d",
-            transition: { duration: 0.5, ease: "easeInOut" },
-          })
-        }
-        onHoverEnd={() =>
-          controls.start({ backgroundColor: "rgba(0, 0, 0, 0)" })
-        }
+        // style={{ rotateX, rotateY }}
+        // animate={controls}
+        // onHoverStart={() =>
+        //   controls.start({
+        //     backgroundColor: "rgba(0, 0, 0, 0.2)",
+        //     transformStyle: "preserve-3d",
+        //     transition: { duration: 0.5, ease: "easeInOut" },
+        //   })
+        // }
+        // onHoverEnd={() =>
+        //   controls.start({ backgroundColor: "rgba(0, 0, 0, 0)" })
+        // }
       >
         <audio id="sendsound" src="/send.mp3" hidden></audio>
 
@@ -350,7 +350,7 @@ export default function SkynetInterface() {
         </motion.div>
 
         {/* Side stripes with enhanced staggered animation */}
-        <motion.div className="fixed left-0 top-0 h-[82%] w-8 items-center lg:flex lg:px-10 hidden flex-col justify-end mb-10">
+        {/* <motion.div className="fixed left-0 top-0 h-[82%] w-8 items-center lg:flex lg:px-10 hidden flex-col justify-end mb-10">
           <motion.div
             className="-rotate-90 font-bold text-3xl ml-6"
             initial="hidden"
@@ -401,7 +401,7 @@ export default function SkynetInterface() {
               </motion.span>
             ))}
           </motion.div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Central skull with hover effect */}
 
@@ -412,7 +412,7 @@ export default function SkynetInterface() {
 
       {/* Add a new pulsating background effect */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-10"
+        className="absolute hidden inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-10"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.1, 0.2, 0.1],
@@ -430,9 +430,9 @@ export default function SkynetInterface() {
         className="fixed mb-20 z-50 lg:mb-0 right-3 bottom-3 selector max-w-lg lg:px-10 px-4 "
       >
         <div
-          style={{
-            transform: "rotateX(15deg) rotateY(8deg)",
-          }}
+          // style={{
+          //   transform: "rotateX(15deg) rotateY(8deg)",
+          // }}
           ref={messagesContainerRef}
           className="max-w-xl mx-auto w-full space-y-4 mb-8 h-[200px] overflow-y-auto selector"
         >
