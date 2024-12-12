@@ -46,6 +46,7 @@ export default function SkynetInterface() {
 
   useEffect(() => {
     const fetchInitialMessages = async () => {
+      setIsTyping(true);
       try {
         const response = await axios.get(API_BASE_URL);
         const initialMessage: Message = {
@@ -58,6 +59,7 @@ export default function SkynetInterface() {
       } catch (error) {
         console.error("Error fetching initial messages:", error);
       }
+      setIsTyping(false);
     };
 
     fetchInitialMessages();
