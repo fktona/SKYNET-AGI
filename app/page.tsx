@@ -13,22 +13,27 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TextPlugin } from "gsap/TextPlugin";
 import { handleMouseEnter } from "@/animations/animation";
+import axios from "axios";
+import { formatDistanceToNow, set } from "date-fns";
+import Image from "next/image";
+
+import { useTypingContext } from "@/context/ctx";
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
+const API_BASE_URL = "https://fortunebot-6dmf.onrender.com/fortune-bot/skynet";
+
 export default function SkynetInterface() {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      content: "Welcome to SKYNET_AGI. How may I assist you?",
-      timestamp: "Just now",
-    },
-    {
-      id: 2,
-      content: "Welcome to SKYNET_AGI. How may I assist you?",
-      timestamp: "Just now",
-    },
-  ]);
+  interface Message {
+    id: number;
+    content: string;
+    timestamp: string | Date;
+    type: "Human" | "Skynet_Agi";
+  }
+
+  const { setIsTyping } = useTypingContext();
+
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -38,6 +43,25 @@ export default function SkynetInterface() {
   const rotateY = useTransform(cursorX, [0, 300], [-5, 5]);
   const controls = useAnimation();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const fetchInitialMessages = async () => {
+      try {
+        const response = await axios.get(API_BASE_URL);
+        const initialMessage: Message = {
+          id: 1,
+          content: response.data.reply,
+          timestamp: new Date(),
+          type: "Skynet_Agi",
+        };
+        setMessages([initialMessage]);
+      } catch (error) {
+        console.error("Error fetching initial messages:", error);
+      }
+    };
+
+    fetchInitialMessages();
+  }, []);
 
   useGSAP(() => {
     // Robotic text animation for the title
@@ -113,23 +137,29 @@ export default function SkynetInterface() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsTyping(true);
     if (inputMessage.trim()) {
-      const newMessage = {
+      const userMessage: Message = {
         id: messages.length + 1,
         content: inputMessage,
-        timestamp: "Just now",
+        timestamp: new Date(),
+        type: "Human",
       };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      setMessages((prevMessages) => [...prevMessages, userMessage]);
       setInputMessage("");
 
-      // Simulate AI response
-      setTimeout(() => {
-        const aiResponse = {
-          id: messages.length + 2,
-          content: "I am processing your request. Please stand by.",
-          timestamp: "Just now",
+      try {
+        const response = await axios.post(API_BASE_URL, {
+          prompt: inputMessage,
+        });
+        const aiResponse: Message = {
+          id: messages.length + Date.now(),
+          content: response.data.reply,
+          timestamp: new Date(),
+          type: "Skynet_Agi",
         };
         setMessages((prevMessages) => [...prevMessages, aiResponse]);
 
@@ -141,16 +171,16 @@ export default function SkynetInterface() {
             ease: "power2.out",
           });
         }
-      }, 1000);
+        setIsTyping(false);
+      } catch (error) {
+        console.error("Error fetching AI response:", error);
+      }
     }
   };
 
-  // const InteractiveCircuit = () => {
-  //   const circuitRef = useRef<SVGSVGElement>(null);
-
   return (
     <motion.div
-      className="min-h-screen text-white relative overflow-hidden"
+      className=" h-full  text-white relative overflow-hidden"
       style={{ perspective: 2000 }}
       animate={controls}
       onHoverStart={() =>
@@ -174,6 +204,8 @@ export default function SkynetInterface() {
         >
           SKYNET_AGI
         </h1>
+
+        <audio id="backgroundAudio" src="/sound.mp3" hidden></audio>
 
         {/* Enhanced animated elements */}
         <motion.div
@@ -364,19 +396,6 @@ export default function SkynetInterface() {
         </motion.div>
 
         {/* Central skull with hover effect */}
-        <motion.div
-          className="absolute inset-0 flex lg:items-center items-start top-[30%] lg:top-0 justify-center"
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 300 }}
-        >
-          <div className="relative w-64 h-64">
-            {/* <img
-              src="/sku.svg"
-              alt="Skull"
-              className="w-full h-full object-contain"
-            /> */}
-          </div>
-        </motion.div>
 
         {/* Messages and input area with enhanced animations */}
         <div className="absolute mb-20 lg:mb-0 right-3 bottom-3 selector max-w-lg lg:px-10 px-4 ">
@@ -386,7 +405,7 @@ export default function SkynetInterface() {
           >
             {messages.map((message) => (
               <motion.div
-                key={message.id + message.timestamp}
+                key={message.id}
                 className="flex items-start gap-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -399,9 +418,13 @@ export default function SkynetInterface() {
                   transition={{ duration: 0.3 }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm text-gray-400">SKYNET_AGI</span>
+                    <span className="text-sm text-gray-400 capitalize">
+                      {message.type}
+                    </span>
                     <span className="lg:text-xs text-[8px] text-gray-500">
-                      {message.timestamp}
+                      {formatDistanceToNow(message.timestamp, {
+                        addSuffix: true,
+                      })}
                     </span>
                   </div>
                   <p className="text-sm">{message.content}</p>
@@ -409,8 +432,8 @@ export default function SkynetInterface() {
               </motion.div>
             ))}
           </div>
-          <form onSubmit={handleSubmit} className="w-full">
-            <div className="relative">
+          <form onSubmit={handleSubmit} className="w-full flex">
+            <div className="relative  w-full flex-1 ">
               <Input
                 ref={inputRef}
                 type="text"
@@ -419,7 +442,7 @@ export default function SkynetInterface() {
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder="What do you have to say?"
-                className="w-full bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
+                className="w-full  relative bg-white/5 border-white h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
               />
               <motion.button
                 type="submit"
@@ -457,63 +480,6 @@ export default function SkynetInterface() {
         </div>
 
         {/* AI indicator with enhanced staggered animation */}
-        <motion.div
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs text-white"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: { transition: { staggerChildren: 0.1 } },
-          }}
-        >
-          <div className="tracking-[0.1em] w-[70vw] max-w-[400px] justify-center text-center items-center relative font-bold text-lg">
-            {[
-              {
-                text: "\\\\\\\\\\\\\\ ",
-                animation: {
-                  hidden: { opacity: 0, y: 10 },
-                  visible: { opacity: 1, y: 0 },
-                },
-              },
-              {
-                text: "AI",
-                animation: {
-                  hidden: { opacity: 0, scale: 0.5 },
-                  visible: { opacity: 1, scale: 1 },
-                },
-              },
-              {
-                text: " /////// ",
-                animation: {
-                  hidden: { opacity: 0, y: -10 },
-                  visible: { opacity: 1, y: 0 },
-                },
-              },
-            ].map((group, groupIndex) =>
-              group.text.split("").map((char, charIndex) => (
-                <motion.span
-                  key={`${groupIndex}-${charIndex}`}
-                  variants={group.animation}
-                >
-                  {char.trim() || <>&nbsp;</>}
-                </motion.span>
-              ))
-            )}
-            <div
-              style={{ perspective: 2000 }}
-              className="absolute rotate-180 w-full h-10"
-            >
-              <div
-                className="w-full h-full bg-white/15"
-                style={{
-                  transform: "rotateX(45deg)",
-                  transformOrigin: "center top",
-                  backfaceVisibility: "hidden",
-                  clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
-                }}
-              ></div>
-            </div>
-          </div>
-        </motion.div>
       </motion.div>
 
       {/* Add a new pulsating background effect */}

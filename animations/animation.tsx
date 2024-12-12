@@ -2,6 +2,8 @@ import { gsap } from "gsap";
 const letters = "!ABCDEFGHIJKLMNOPQRSTUVWXYZ#";
 
 export const handleMouseEnter = (el: any) => {
+  const audio = document.getElementById("backgroundAudio") as HTMLAudioElement;
+  audio.play();
   if (!el) return;
   el = el.target;
   let iteration: number = 0;

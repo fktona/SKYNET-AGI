@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import RoboticCursor from "@/components/smooth-cursor";
+import Footer from "@/components/footer";
+import SkullInWave from "@/components/skull";
+import { TypingProvider } from "@/context/ctx";
 
 const ppInter = Inter({
   subsets: ["latin"],
@@ -20,9 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${ppInter.className} antialiased bg-gray-700`}>
-        <RoboticCursor />
-        <main className="bg-glitch h-dvh">{children}</main>
+      <body className={`${ppInter.className} antialiased bg-gray-700 h-dvh`}>
+        <TypingProvider>
+          {" "}
+          <RoboticCursor />
+          <SkullInWave />
+          <main className="bg-glitch h-dvh">{children}</main>
+          <Footer />
+        </TypingProvider>
       </body>
     </html>
   );

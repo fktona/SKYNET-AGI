@@ -79,3 +79,7 @@ body {
 .selector::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Edge */
 }
+.scaling-box {
+  transform: scale3d(1.2, 1.2, 1.2) rotateX(10deg) rotateY(10deg);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}

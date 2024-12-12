@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
+    "axia": "^0.1.0",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "framer-motion": "^11.13.5",
     "gsap": "^3.12.5",
     "lucide-react": "^0.468.0",
