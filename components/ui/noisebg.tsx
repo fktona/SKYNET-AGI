@@ -1,9 +1,23 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
-const GlitchNoiseBackground: React.FC = () => {
+const EnhancedDiamondStoneGlitchBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -13,60 +27,107 @@ const GlitchNoiseBackground: React.FC = () => {
 
     if (!context) return;
 
-    const generateGlitchNoise = () => {
-      const imageData = context.createImageData(canvas.width, canvas.height);
-      const data = imageData.data;
+    let animationFrameId: number;
 
-      for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-          const index = (y * canvas.width + x) * 4;
+    const drawDiamond = (x: number, y: number, size: number) => {
+      context.beginPath();
+      context.moveTo(x, y - size / 2);
+      context.lineTo(x + size / 4, y);
+      context.lineTo(x, y + size / 2);
+      context.lineTo(x - size / 6, y);
+      context.closePath();
+      context.fill();
+    };
 
-          // Static noise with reduced opacity
-          const value = Math.random() * 255;
-          data[index] = value; // Red
-          data[index + 1] = value; // Green
-          data[index + 2] = value; // Blue
-          data[index + 3] = Math.random() * 50 + 50; // Very low alpha (50-100)
-        }
+    const generateDiamondStones = () => {
+      const numStones = Math.floor((canvas.width * canvas.height) / 2000);
+
+      for (let i = 0; i < numStones; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height * 2;
+        const size = Math.random() * 4 + 5;
+        const brightness = Math.random() * 40 + 60;
+
+        context.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+        drawDiamond(x, y, size);
       }
+    };
 
-      context.putImageData(imageData, 0, 0);
-
-      // Add horizontal glitch bars
-      for (let i = 0; i < 10; i++) {
-        // Frequency of glitch bars
-        const barHeight = Math.random() * 5 + 3; // Bar height between 3-8px
-        const y = Math.random() * canvas.height;
-        const glitchWidth = Math.random() * canvas.width * 0.8; // Wider bars
-
-        context.fillStyle = `rgba(${Math.random() * 255}, ${
-          Math.random() * 255
-        }, ${Math.random() * 255}, 0.9)`; // Prominent glitch bars
-        context.fillRect(
-          Math.random() * canvas.width - glitchWidth / 2,
-          y,
-          glitchWidth,
-          barHeight
+    const generateGlitchNoise = (time: number) => {
+      if (canvas.width === 0 || canvas.height === 0) {
+        console.warn(
+          "Canvas has zero width or height. Skipping glitch effect."
         );
+        return;
+      }
+
+      try {
+        const imageData = context.getImageData(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        const data = imageData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+          const noise = Math.random() * 20 - 10;
+          data[i] = Math.max(0, Math.min(255, data[i] + noise));
+          data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
+          data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
+        }
+
+        context.putImageData(imageData, 0, 0);
+
+        for (let i = 0; i < 20; i++) {
+          const barHeight = Math.random() * 10 + 5;
+          const y = Math.random() * canvas.height;
+          const glitchWidth = Math.random() * canvas.width;
+
+          context.fillStyle = `hsla(${Math.random() * 360}, 100%, 50%, 0.1)`;
+          context.fillRect(
+            Math.sin(time * 0.31) * canvas.width,
+            y,
+            glitchWidth,
+            barHeight
+          );
+        }
+      } catch (error) {
+        console.error("Error generating glitch noise:", error);
       }
     };
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const generateFlickerEffect = (time: number) => {
+      const flickerIntensity = Math.sin(time * 0.1) * 0.5 + 0.5;
+      context.fillStyle = `rgba(255, 255, 255, ${flickerIntensity * 0.1})`;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (Math.random() < 0.05) {
+        context.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.2})`;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
     };
 
-    const animateNoise = () => {
-      generateGlitchNoise();
-      requestAnimationFrame(animateNoise);
+    const animate = (time: number) => {
+      if (canvas.width > 0 && canvas.height > 0) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        generateDiamondStones();
+        generateGlitchNoise(time);
+        generateFlickerEffect(time);
+      }
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    resizeCanvas();
-    animateNoise();
+    if (dimensions.width > 0 && dimensions.height > 0) {
+      canvas.width = dimensions.width;
+      canvas.height = dimensions.height;
+      animate(0);
+    }
 
-    window.addEventListener("resize", resizeCanvas);
-    return () => window.removeEventListener("resize", resizeCanvas);
-  }, []);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [dimensions]);
 
   return (
     <canvas
@@ -79,10 +140,10 @@ const GlitchNoiseBackground: React.FC = () => {
         height: "100%",
         zIndex: 20,
         pointerEvents: "none",
-        opacity: 0.095, // Slightly visible background overall
+        opacity: 0.35,
       }}
     />
   );
 };
 
-export default GlitchNoiseBackground;
+export default EnhancedDiamondStoneGlitchBackground;

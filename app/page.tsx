@@ -13,6 +13,7 @@ import { formatDistanceToNow } from "date-fns";
 
 import { useTypingContext } from "@/context/ctx";
 import { u } from "framer-motion/client";
+import { Copy, CopyCheckIcon } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -198,7 +199,7 @@ export default function SkynetInterface() {
           <div className="flex flex-col w-fit lg:hidden ">
             Welcome, Human
             <br />
-            <p className="flex gap-1">
+            <div className="flex gap-1">
               <span className=" text-red-300">CA: </span>
               <span
                 onMouseEnter={handleMouseEnter}
@@ -208,10 +209,23 @@ export default function SkynetInterface() {
               >
                 DNKDDW808DSPUMP
               </span>
-            </p>
+
+              <button
+                onClick={() => navigator.clipboard.writeText("DNKDDW808DSPUMP")}
+                className="active:scale-95 hover:opacity-80 hover:scale-105"
+              >
+                <Copy />
+              </button>
+            </div>
           </div>
           <div className="text-center">
-            Sound <button className="text-red-600">ON</button>
+            Sound{" "}
+            <button
+              onClick={() => setIsSoundAllowed(!isSoundAllowed)}
+              className="text-red-900"
+            >
+              {isSoundAllowed ? "ON" : "OFF"}
+            </button>
           </div>
         </div>
 
@@ -267,17 +281,18 @@ export default function SkynetInterface() {
         <div className="flex justify-between relative lg:text-[21px]">
           <div className="lg:flex flex-col gap-3 z-20 relative hidden ">
             Welcome, Human
-            <p className="flex gap-1">
+            <div className="flex gap-2 items-center">
               <span className=" text-red-300">CA: </span>
-              <span
-                onMouseEnter={handleMouseEnter}
-                ref={caRef}
-                data-value="DNKDDW808DSPUMP"
-                className=" text-red-300"
-              >
+              <span data-value="DNKDDW808DSPUMP" className=" text-red-300">
                 DNKDDW808DSPUMP
               </span>
-            </p>
+              <button
+                onClick={() => navigator.clipboard.writeText("DNKDDW808DSPUMP")}
+                className="active:scale-95 hover:opacity-80 hover:scale-105"
+              >
+                <Copy />
+              </button>
+            </div>
           </div>
           <div className="text-center w-full absolute h-full hidden lg:block">
             Sound{" "}

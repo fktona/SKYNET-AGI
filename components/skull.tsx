@@ -15,7 +15,7 @@ const SkullInWave = () => {
 
   const containerVariants = {
     hidden: { scale: 0.5, z: -200 },
-    visible: { scale: 1.4, z: 0 },
+    visible: { scale: 1.2, z: 0 },
   };
 
   const corruptionVariants = {
@@ -44,7 +44,7 @@ const SkullInWave = () => {
       transition={{ type: "spring", stiffness: 300 }}
     >
       <motion.div
-        className="absolute inset-0 flex items-center justify-center"
+        className="absolute inset-0 flex lg:items-center items-start justify-center"
         initial="hidden"
         animate={isSpeaking && isSoundAllowed ? "visible" : "hidden"}
         variants={containerVariants}
