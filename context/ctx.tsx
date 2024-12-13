@@ -2,12 +2,14 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type TypingContextType = {
-  isLoading: boolean;
+  isSpeaking: boolean;
   isTyping: boolean;
-  setIsLoading: (loading: boolean) => void;
+  setIsSpeaking: (Speaking: boolean) => void;
   setIsTyping: (typing: boolean) => void;
   setSendSound: (sendSound: boolean) => void;
   sendSound: boolean;
+  isSoundAllowed: boolean;
+  setIsSoundAllowed: (soundAllowed: boolean) => void;
 };
 
 const TypingContext = createContext<TypingContextType | undefined>(undefined);
@@ -17,19 +19,22 @@ type TypingProviderProps = {
 };
 
 export const TypingProvider: React.FC<TypingProviderProps> = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [sendSound, setSendSound] = useState(false);
+  const [isSoundAllowed, setIsSoundAllowed] = useState(false);
 
   return (
     <TypingContext.Provider
       value={{
-        isLoading,
+        isSpeaking,
         isTyping,
-        setIsLoading,
+        setIsSpeaking,
         setIsTyping,
         sendSound,
         setSendSound,
+        isSoundAllowed,
+        setIsSoundAllowed,
       }}
     >
       {children}

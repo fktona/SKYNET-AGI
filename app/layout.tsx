@@ -6,6 +6,7 @@ import RoboticCursor from "@/components/smooth-cursor";
 import Footer from "@/components/footer";
 import SkullInWave from "@/components/skull";
 import { TypingProvider } from "@/context/ctx";
+import RobotNoiseBackground from "@/components/ui/noisebg";
 
 const ppInter = Inter({
   subsets: ["latin"],
@@ -23,12 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${ppInter.className} antialiased bg-gray-700 h-dvh`}>
+      <body className={`${ppInter.className} antialiased  bg-red-600 h-dvh`}>
         <TypingProvider>
-          {" "}
           <RoboticCursor />
           <SkullInWave />
-          <main className=" h-dvh mb-10 bg-black">{children}</main>
+          <div className="absolute top-0 left-0 w-full h-full " />
+          <RobotNoiseBackground />
+          <main className=" h-dvh mb-10 bg-glitch">{children}</main>
           {/* <Footer /> */}
         </TypingProvider>
       </body>
