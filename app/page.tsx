@@ -73,7 +73,8 @@ export default function SkynetInterface() {
 
         // isSoundAllowed && speakRobotically(initialMessage.content);
         setMessages([initialMessage]);
-        (document.getElementById("sendsound") as HTMLAudioElement)?.play();
+        isSoundAllowed &&
+          (document.getElementById("sendsound") as HTMLAudioElement)?.play();
       } catch (error) {
         console.error("Error fetching initial messages:", error);
       }
