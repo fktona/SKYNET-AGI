@@ -10,6 +10,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        inter: "var(--font-inter)",
+        cyborg: "var(--font-cyborg)",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -63,14 +67,21 @@ export default {
     require("tailwindcss-animate"),
     (api: PluginAPI) => {
       const { addUtilities } = api;
-      addUtilities({
-        ".bg-glitch": {
-          backgroundImage: 'url("/bG.gif")',
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+      addUtilities(
+        {
+          ".bg-glitch": {
+            backgroundImage: 'url("/bG.gif")',
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          },
+          ".sm\\:bg-glitch": {
+            backgroundPosition: "top",
+            backgroundSize: "cover",
+          },
         },
-      });
+        { respectPrefix: false, respectImportant: false }
+      );
     },
   ],
 } satisfies Config;

@@ -195,16 +195,16 @@ export default function SkynetInterface() {
     <motion.div className=" h-full  text-white relative overflow-hidden">
       <motion.div className="relative z-10 min-h-screen flex flex-col p-8">
         <audio id="sendsound" src="/send.mp3" hidden></audio>
-        <div className="flex lg:hidden fixed left-0 w-full top-9 justify-between text-[13px] px-6 text-base">
-          <div className="flex flex-col w-fit lg:hidden ">
+        <div className="flex lg:hidden fixed left-0 w-full top-9 justify-between items-center text-[13px] px-6 text-base">
+          <div className="flex flex-col w-fit lg:hidden text-sm gap-3">
             Welcome, Human
             <br />
-            <div className="flex gap-1">
+            <div className="flex gap-1 text-sm">
               <span className=" text-red-300">CA: </span>
               <span
-                onMouseEnter={handleMouseEnter}
-                ref={caRef}
-                data-value="DNKDDW808DSPUMP"
+                // onMouseEnter={handleMouseEnter}
+                // ref={caRef}
+                // data-value="DNKDDW808DSPUMP"
                 className=" text-red-300"
               >
                 DNKDDW808DSPUMP
@@ -214,11 +214,11 @@ export default function SkynetInterface() {
                 onClick={() => navigator.clipboard.writeText("DNKDDW808DSPUMP")}
                 className="active:scale-95 hover:opacity-80 hover:scale-105"
               >
-                <Copy />
+                <Copy size={14} />
               </button>
             </div>
           </div>
-          <div className="text-center">
+          <div className="text-center text-sm">
             Sound{" "}
             <button
               onClick={() => setIsSoundAllowed(!isSoundAllowed)}
@@ -228,15 +228,6 @@ export default function SkynetInterface() {
             </button>
           </div>
         </div>
-
-        {/* <h1
-          ref={caRef}
-          data-value="SKYNET_AGI"
-          onMouseEnter={handleMouseEnter}
-          className="lg:text-[50px] text-[33.05px] relative z-50  font-mono font-extrabold text-center mb-8 tracking-widest"
-        >
-          SKYNET_AGI
-        </h1> */}
 
         <audio id="backgroundAudio" src="/sound.mp3" hidden></audio>
       </motion.div>
@@ -249,7 +240,7 @@ export default function SkynetInterface() {
       >
         <div
           ref={messagesContainerRef}
-          className="mx-auto  relative w-full flex items-end flex-col space-y-2 mb-8 h-[350px] overflow-y-auto selector"
+          className="mx-auto  relative w-full flex items-end flex-col gap-4 lg:mb-8 md:h-[350px] h-[250px] overflow-y-auto selector"
         >
           {messages.map((message) => (
             <motion.div
@@ -260,10 +251,12 @@ export default function SkynetInterface() {
               transition={{ duration: 0.5 }}
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div className="flex-1 rounded p-4">
+              <motion.div className="flex-1 rounded px-4 py-2">
                 <div className="flex items-center gap-2 mb-2  mix-blend-difference  text-red-600">
-                  <span className="text-sm  uppercase">{message.type}</span>
-                  <span className="lg:text-xs text-[8px] ">
+                  <span className="text-sm  uppercase font-inter">
+                    {message.type}
+                  </span>
+                  <span className="lg:text-xs text-[8px] font-inter ">
                     {formatDistanceToNow(message.timestamp, {
                       addSuffix: false,
                     }) == "less than a minute"
@@ -308,7 +301,7 @@ export default function SkynetInterface() {
             onSubmit={handleSubmit}
             className=" lg:min-w-[30%] min-w-full relative justify-center flex"
           >
-            <div className="relative w-full flex-1     ">
+            <div className="relative w-full flex-1  px-4 max-w-xl">
               <input
                 ref={inputRef}
                 type="text"
@@ -317,7 +310,7 @@ export default function SkynetInterface() {
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder="What do you have to say?"
-                className="w-full  relative min-w-full bg-transparent outline-none border-2 px-2 text-sm  border-red-600 h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
+                className="w-full   relative font-inter min-w-full bg-transparent outline-none border-2 px-2 text-sm  border-red-600 h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
               />
               <motion.button
                 type="submit"

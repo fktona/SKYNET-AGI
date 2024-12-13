@@ -14,12 +14,12 @@ const SkullInWave = () => {
   }, [isSpeaking, isSoundAllowed]);
 
   const containerVariants = {
-    hidden: { scale: 0.5, z: -200 },
-    visible: { scale: 1.2, z: 0 },
+    hidden: { scale: 0.7, z: -600 },
+    visible: { scale: 1.4, z: 0 },
   };
 
   const corruptionVariants = {
-    hidden: { opacity: 1, scale: 0.8 },
+    hidden: { opacity: 1, scale: 1.8 },
     visible: {
       opacity: 1,
       scale: 1,
@@ -44,7 +44,7 @@ const SkullInWave = () => {
       transition={{ type: "spring", stiffness: 300 }}
     >
       <motion.div
-        className="absolute inset-0 flex lg:items-center items-start justify-center"
+        className="absolute inset-0 flex items-center -top-16 md:top-0 justify-center"
         initial="hidden"
         animate={isSpeaking && isSoundAllowed ? "visible" : "hidden"}
         variants={containerVariants}
@@ -62,7 +62,7 @@ const SkullInWave = () => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="absolute inset-0 flex items-center justify-center"
+              className="absolute inset-0 flex lg:items-center justify-center"
             >
               <motion.div
                 animate={{
@@ -86,11 +86,11 @@ const SkullInWave = () => {
                       ? "Speaking Skull"
                       : "Silent Skull"
                   }
-                  width={400}
-                  height={400}
+                  width={500}
+                  height={500}
                   priority
                   unoptimized
-                  className="object-contain corruption-effect"
+                  className="object-cover  w-80 h-80 lg:w-[400px] lg:h-[400px] corruption-effect"
                 />
               </motion.div>
             </motion.div>
