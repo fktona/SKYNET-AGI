@@ -14,6 +14,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useTypingContext } from "@/context/ctx";
 import { u } from "framer-motion/client";
 import { Copy, CopyCheckIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -222,7 +223,7 @@ export default function SkynetInterface() {
             Sound{" "}
             <button
               onClick={() => setIsSoundAllowed(!isSoundAllowed)}
-              className="text-green-500"
+              className={cn(isSoundAllowed ? "text-green-500" : "text-red-500")}
             >
               {isSoundAllowed ? "ON" : "OFF"}
             </button>
@@ -291,7 +292,7 @@ export default function SkynetInterface() {
             Sound{" "}
             <button
               onClick={() => setIsSoundAllowed(!isSoundAllowed)}
-              className="text-green-500"
+              className={cn(isSoundAllowed ? "text-green-500" : "text-red-500")}
             >
               {isSoundAllowed ? "ON" : "OFF"}
             </button>
