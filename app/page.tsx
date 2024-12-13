@@ -200,21 +200,21 @@ export default function SkynetInterface() {
             Welcome, Human
             <br />
             <div className="flex gap-1 text-sm">
-              <span className=" text-red-300">CA: </span>
-              <span
+              {/* <span className=" text-red-300">CA: </span> */}
+              {/* <span
                 // onMouseEnter={handleMouseEnter}
                 // ref={caRef}
                 // data-value="DNKDDW808DSPUMP"
                 className=" text-red-300"
               >
                 DNKDDW808DSPUMP
-              </span>
+              </span> */}
 
               <button
                 onClick={() => navigator.clipboard.writeText("DNKDDW808DSPUMP")}
                 className="active:scale-95 hover:opacity-80 hover:scale-105"
               >
-                <Copy size={14} />
+                {/* <Copy size={14} /> */}
               </button>
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function SkynetInterface() {
             Sound{" "}
             <button
               onClick={() => setIsSoundAllowed(!isSoundAllowed)}
-              className="text-red-900"
+              className="text-green-500"
             >
               {isSoundAllowed ? "ON" : "OFF"}
             </button>
@@ -275,15 +275,15 @@ export default function SkynetInterface() {
           <div className="lg:flex flex-col gap-3 z-20 relative hidden ">
             Welcome, Human
             <div className="flex gap-2 items-center">
-              <span className=" text-red-300">CA: </span>
-              <span data-value="DNKDDW808DSPUMP" className=" text-red-300">
+              {/* <span className=" text-red-300">CA: </span> */}
+              {/* <span data-value="DNKDDW808DSPUMP" className=" text-red-300">
                 DNKDDW808DSPUMP
-              </span>
+              </span> */}
               <button
                 onClick={() => navigator.clipboard.writeText("DNKDDW808DSPUMP")}
                 className="active:scale-95 hover:opacity-80 hover:scale-105"
               >
-                <Copy />
+                {/* <Copy /> */}
               </button>
             </div>
           </div>
@@ -291,7 +291,7 @@ export default function SkynetInterface() {
             Sound{" "}
             <button
               onClick={() => setIsSoundAllowed(!isSoundAllowed)}
-              className="text-red-900"
+              className="text-green-500"
             >
               {isSoundAllowed ? "ON" : "OFF"}
             </button>
@@ -314,7 +314,7 @@ export default function SkynetInterface() {
               />
               <motion.button
                 type="submit"
-                className="absolute right-5 top-[20%]  "
+                className="absolute right-8 top-[25%]"
                 // whileHover={{ scale: 1.1, rotate: 360 }}
                 // whileTap={{ scale: 0.9 }}
               >
