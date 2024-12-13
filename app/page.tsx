@@ -236,11 +236,11 @@ export default function SkynetInterface() {
         style={{
           perspective: 2000,
         }}
-        className="fixed mb-20 z-50 lg:mb-0 right-3 bottom-3 selector w-full  lg:px-10 px-4 "
+        className="fixed mb-8 z-50 lg:mb-0 right-3 bottom-3 selector w-full  lg:px-10 px-4 "
       >
         <div
           ref={messagesContainerRef}
-          className="mx-auto  relative w-full flex items-end flex-col gap-4 lg:mb-8 md:h-[350px] h-[250px] overflow-y-auto selector"
+          className="mx-auto  relative w-full mb-6 flex items-end flex-col gap-4 lg:mb-8 md:h-[350px] h-[250px] overflow-y-auto selector"
         >
           {messages.map((message) => (
             <motion.div
