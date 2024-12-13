@@ -201,22 +201,11 @@ export default function SkynetInterface() {
             Welcome, Human
             <br />
             <div className="flex gap-1 text-sm">
-              <span className=" text-red-300">CA: </span>
-              {/* <span
-                // onMouseEnter={handleMouseEnter}
-                // ref={caRef}
-                // data-value="DNKDDW808DSPUMP"
-                className=" text-red-300"
-              >
-                DNKDDW808DSPUMP
-              </span> */}
-
-              <button
-                onClick={() => navigator.clipboard.writeText("DNKDDW808DSPUMP")}
-                className="active:scale-95 hover:opacity-80 hover:scale-105"
-              >
-                {/* <Copy size={14} /> */}
-              </button>
+              <span className=" text-red-300">CA: </span>*{" "}
+              <span className=" text-red-300 text-[8px]">
+                B8rpzvcTf7VtUUHGAxW4HmidsNjGddCPEsH9md8Apump
+              </span>
+              <ClipboardToast />
             </div>
           </div>
           <div className="text-center text-sm">
@@ -277,15 +266,10 @@ export default function SkynetInterface() {
             Welcome, Human
             <div className="flex gap-2 items-center">
               <span className=" text-red-300">CA: </span>
-              {/* <span data-value="DNKDDW808DSPUMP" className=" text-red-300">
-                DNKDDW808DSPUMP
-              </span> */}
-              <button
-                onClick={() => navigator.clipboard.writeText("DNKDDW808DSPUMP")}
-                className="active:scale-95 hover:opacity-80 hover:scale-105"
-              >
-                {/* <Copy /> */}
-              </button>
+              <span className=" text-red-300 text-sm">
+                B8rpzvcTf7VtUUHGAxW4HmidsNjGddCPEsH9md8Apump
+              </span>
+              <ClipboardToast />
             </div>
           </div>
           <div className="text-center w-full absolute h-full hidden lg:block">
@@ -348,6 +332,38 @@ export default function SkynetInterface() {
           </form>
         </div>
       </div>
+    </motion.div>
+  );
+}
+
+function ClipboardToast() {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Hide toast after 2 seconds
+    });
+  };
+
+  return (
+    <motion.div
+      className="relative"
+      initial={{ scale: 0.4 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.2 }}
+    >
+      <button
+        onClick={() => handleCopy("DNKDDW808DSPUMP")}
+        className="hover:opacity-80 active:scale-95"
+      >
+        <Copy size={18} />
+      </button>
+      {copied && (
+        <div className="absolute top-[-40px] left-0 bg-red-600 text-white px-2 py-1 rounded-md text-xs animate-bounce">
+          Copied!
+        </div>
+      )}
     </motion.div>
   );
 }
