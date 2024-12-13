@@ -15,7 +15,7 @@ const SkullInWave = () => {
 
   const containerVariants = {
     hidden: { scale: 1, z: -600 },
-    visible: { scale: 1.6, z: 0 },
+    visible: { scale: 1.4, z: 0 },
   };
 
   const corruptionVariants = {
