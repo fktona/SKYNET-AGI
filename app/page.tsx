@@ -354,7 +354,9 @@ function ClipboardToast() {
       transition={{ duration: 0.2 }}
     >
       <button
-        onClick={() => handleCopy("DNKDDW808DSPUMP")}
+        onClick={() =>
+          handleCopy("B8rpzvcTf7VtUUHGAxW4HmidsNjGddCPEsH9md8Apump")
+        }
         className="hover:opacity-80 active:scale-95"
       >
         <Copy size={18} />
