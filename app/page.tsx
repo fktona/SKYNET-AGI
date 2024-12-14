@@ -202,10 +202,10 @@ export default function SkynetInterface() {
             <br />
             <div className="flex gap-1 text-sm">
               <span className=" text-red-300">CA: </span>*{" "}
-              <span className=" text-red-300 text-[8px]">
+              {/* <span className=" text-red-300 text-[8px]">
                 B8rpzvcTf7VtUUHGAxW4HmidsNjGddCPEsH9md8Apump
-              </span>
-              <ClipboardToast />
+              </span> */}
+              {/* <ClipboardToast /> */}
             </div>
           </div>
           <div className="text-center text-sm">
@@ -266,10 +266,10 @@ export default function SkynetInterface() {
             Welcome, Human
             <div className="flex gap-2 items-center">
               <span className=" text-red-300">CA: </span>
-              <span className=" text-red-300 text-sm">
+              {/* <span className=" text-red-300 text-sm">
                 B8rpzvcTf7VtUUHGAxW4HmidsNjGddCPEsH9md8Apump
-              </span>
-              <ClipboardToast />
+              </span> */}
+              {/* <ClipboardToast /> */}
             </div>
           </div>
           <div className="text-center w-full absolute h-full hidden lg:block">
@@ -354,9 +354,7 @@ function ClipboardToast() {
       transition={{ duration: 0.2 }}
     >
       <button
-        onClick={() =>
-          handleCopy("B8rpzvcTf7VtUUHGAxW4HmidsNjGddCPEsH9md8Apump")
-        }
+        onClick={() => handleCopy("")}
         className="hover:opacity-80 active:scale-95"
       >
         <Copy size={18} />
