@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue } from "framer-motion";
-import { Input } from "@/components/ui/input";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,9 +11,9 @@ import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 
 import { useTypingContext } from "@/context/ctx";
-import { u } from "framer-motion/client";
 import { Copy, CopyCheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -194,6 +193,15 @@ export default function SkynetInterface() {
 
   return (
     <motion.div className=" h-full  text-white relative overflow-hidden">
+      <a
+        href="https://x.com/SkynetAGI_"
+        target="_blank"
+        className="text-[16px] relative z-50 mt-[100px]  flex items-center justify-center gap-1"
+      >
+        <Image src="/x.png" width={20} height={20} alt="Skynet" className="" />
+
+        <span className="">SkynetAGI_</span>
+      </a>
       <motion.div className="relative z-10 min-h-screen flex flex-col p-8">
         <audio id="sendsound" src="/send.mp3" hidden></audio>
         <div className="flex lg:hidden fixed left-0 w-full top-9 justify-between items-center text-[13px] px-6 text-base">
@@ -209,7 +217,7 @@ export default function SkynetInterface() {
             </div>
           </div>
           <div className="text-center text-sm">
-            Sound{" "}
+            Sound
             <button
               onClick={() => setIsSoundAllowed(!isSoundAllowed)}
               className={cn(isSoundAllowed ? "text-green-500" : "text-red-500")}
@@ -226,7 +234,7 @@ export default function SkynetInterface() {
         style={{
           perspective: 2000,
         }}
-        className="fixed mb-8 z-50 lg:mb-0 right-3 bottom-3 selector w-full  lg:px-10 px-4 "
+        className="fixed  mb-8 z-50 lg:mb-0 right-3 bottom-3 selector w-full  lg:px-10 px-4 "
       >
         <div
           ref={messagesContainerRef}
@@ -272,14 +280,33 @@ export default function SkynetInterface() {
               {/* <ClipboardToast /> */}
             </div>
           </div>
-          <div className="text-center w-full absolute h-full hidden lg:block">
-            Sound{" "}
-            <button
-              onClick={() => setIsSoundAllowed(!isSoundAllowed)}
-              className={cn(isSoundAllowed ? "text-green-500" : "text-red-500")}
+          <div className="flex items-center absolute w-full justify-center gap-6 ">
+            <a
+              href="https://x.com/SkynetAGI_"
+              target="_blank"
+              className="text-[21px] hidden  lg:flex items-center justify-center gap-1"
             >
-              {isSoundAllowed ? "ON" : "OFF"}
-            </button>
+              <Image
+                src="/x.png"
+                width={20}
+                height={20}
+                alt="Skynet"
+                className=""
+              />
+
+              <span className="">SkynetAGI_</span>
+            </a>
+            <div className="text-center  lg:flex gap-3 items-center justify-center   h-full hidden ">
+              Sound
+              <button
+                onClick={() => setIsSoundAllowed(!isSoundAllowed)}
+                className={cn(
+                  isSoundAllowed ? "text-green-500" : "text-red-500"
+                )}
+              >
+                {isSoundAllowed ? "ON" : "OFF"}
+              </button>
+            </div>
           </div>
 
           <form
@@ -295,7 +322,7 @@ export default function SkynetInterface() {
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder="What do you have to say?"
-                className="w-full   relative font-inter min-w-full bg-transparent outline-none border-2 px-2 text-sm  border-red-600 h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
+                className="w-full  font-cyborg relative  min-w-full bg-transparent outline-none border-2 px-2 text-sm  border-red-600 h-[50px] rounded-md text-white placeholder:text-white transition-all duration-300 ease-in-out hover:bg-white/10"
               />
               <motion.button
                 type="submit"
