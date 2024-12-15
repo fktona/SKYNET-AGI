@@ -196,7 +196,7 @@ export default function SkynetInterface() {
       <a
         href="https://x.com/SkynetAGI_"
         target="_blank"
-        className="text-[16px] relative z-50 mt-[100px]  flex items-center justify-center gap-1"
+        className="text-[16px] relative z-50 mt-[100px]  lg:hidden flex items-center justify-center gap-1"
       >
         <Image src="/x.png" width={20} height={20} alt="Skynet" className="" />
 
